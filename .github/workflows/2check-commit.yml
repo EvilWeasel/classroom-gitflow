@@ -1,0 +1,26 @@
+name: Check Commit Message for Milk Addition
+
+on:
+  push:
+    branches:
+      - feature/more-moisture
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Check Commit Message
+      run: |
+        $commitMessage = git log -1 --pretty=%B
+        if ($commitMessage -match "(?=.*(?:added|Added|hinzugefügt|hinzugefuegt))(?=.*(?:50\s*ml|mL|ML))(?=.*(?:milk|Milch)).*") {
+          Write-Host "Test passed: Commit message contains the milk addition."
+          exit 0
+        } else {
+          Write-Host "Test failed: Commit message does not contain the milk addition."
+          exit 1
+        }
+      shell: pwsh
