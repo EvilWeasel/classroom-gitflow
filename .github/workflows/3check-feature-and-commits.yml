@@ -13,10 +13,13 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v2
 
+    - name: Fetch main branch
+      run: git fetch origin main:main
+
     - name: Run Test
       run: |
         $branchExists = git ls-remote --heads origin feature/more-moisture
-        $commits = git rev-list --count origin/main..HEAD
+        $commits = git rev-list --count main..HEAD
         if ($branchExists -and $commits -gt 0) {
           Write-Host "Test bestanden: Der Branch 'feature/more-moisture' existiert im Remote-Repository und hat neue Commits."
           exit 0

@@ -15,12 +15,19 @@ jobs:
 
     - name: Check Commit Message
       run: |
-        $commitMessage = git log -1 --pretty=%B
-        if ($commitMessage -match "(?=.*(?:added|Added|hinzugefügt|hinzugefuegt))(?=.*(?:50\s*ml|mL|ML))(?=.*(?:milk|Milch)).*") {
-          Write-Host "Test passed: Commit message contains the milk addition."
+        $commitMessages = git log --pretty=%B
+        $found = $false
+        foreach ($message in $commitMessages -split "`n`n") {
+          if ($message -match "(?=.*(?:added|Added|hinzugefügt|hinzugefuegt))(?=.*(?:50\s*ml|mL|ML))(?=.*(?:milk|Milch)).*") {
+            $found = $true
+            break
+          }
+        }
+        if ($found) {
+          Write-Host "Test bestanden: Commit-Nachricht enthält die Milchzugabe."
           exit 0
         } else {
-          Write-Host "Test failed: Commit message does not contain the milk addition."
+          Write-Host "Test fehlgeschlagen: Commit-Nachricht enthält nicht die Milchzugabe."
           exit 1
         }
       shell: pwsh

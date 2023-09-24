@@ -2,8 +2,7 @@ name: Check Instructor's Change
 
 on:
   pull_request:
-    branches:
-      - main
+    types: [opened, synchronize, reopened]
 
 jobs:
   check-change:
@@ -15,7 +14,8 @@ jobs:
 
     - name: Run Test
       run: |
-        $changeExists = git log --pretty=%B -n 1 HEAD | Select-String -Pattern "🥛"
+        git fetch origin main:main
+        $changeExists = git diff main..HEAD | Select-String -Pattern "🥛"
         if ($changeExists) {
           Write-Host "Test bestanden: Die Änderung des Instructors wurde gefunden."
           exit 0

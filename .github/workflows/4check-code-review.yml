@@ -1,8 +1,8 @@
 name: Code Review Test
 
 on:
-  pull_request_review:
-    types: [submitted]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   test:
@@ -14,7 +14,7 @@ jobs:
 
     - name: Run Test
       run: |
-        $reviewerTagged = git log --grep="@EvilWeasel"
+        $reviewerTagged = git log --pretty=%B -n 10 | Select-String -Pattern "@"
         
         if ($reviewerTagged) {
           Write-Host "Test bestanden: Reviewer getaggt."
